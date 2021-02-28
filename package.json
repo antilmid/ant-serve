@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "npx pm2 start ./server/index.js --name ant-serve",
+    "stop": "npx pm2 kill",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +20,7 @@
   "homepage": "https://github.com/antilmid/ant-serve#readme",
   "dependencies": {
     "koa": "^2.13.1",
-    "koa-static": "^5.0.0"
+    "koa-static": "^5.0.0",
+    "pm2": "^4.5.5"
   }
 }
