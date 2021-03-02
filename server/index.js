@@ -41,7 +41,10 @@ const requireFn = (rqPath) => {
 // 加载中间件
 (serverConfig.middleware || []).map((middleware) => {
   if (typeof middleware === "string") {
-    const mwPath = path.resolve(__dirname, "./middleware", middleware);
+    const mvPath_Cg = serverConfig.middlewarePath;
+    const mwPath = mvPath_Cg
+      ? path.resolve(mvPath_Cg, middleware)
+      : path.resolve(__dirname, "./middleware", middleware);
     const mwFn = requireFn(mwPath);
     app.use(async (ctx, next) => mwFn(ctx, next, baseData));
   }

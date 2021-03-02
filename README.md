@@ -2,7 +2,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Ant-Serve（蚂蚁服务器）](#ant-serve%E8%9A%82%E8%9A%81%E6%9C%8D%E5%8A%A1%E5%99%A8)
-- [开箱即用，简单方便](#%E5%BC%80%E7%AE%B1%E5%8D%B3%E7%94%A8%E7%AE%80%E5%8D%95%E6%96%B9%E4%BE%BF)
+  - [1. 开箱即用，简单方便](#1-%E5%BC%80%E7%AE%B1%E5%8D%B3%E7%94%A8%E7%AE%80%E5%8D%95%E6%96%B9%E4%BE%BF)
+  - [2. server 配置](#2-server-%E9%85%8D%E7%BD%AE)
+    - [2.1 port 端口设定](#21-port-%E7%AB%AF%E5%8F%A3%E8%AE%BE%E5%AE%9A)
+    - [2.2 middleware 中间件使用](#22-middleware-%E4%B8%AD%E9%97%B4%E4%BB%B6%E4%BD%BF%E7%94%A8)
+    - [2.3 middlewarePath 设置中间件搜寻地址](#23-middlewarepath-%E8%AE%BE%E7%BD%AE%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%90%9C%E5%AF%BB%E5%9C%B0%E5%9D%80)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -14,7 +18,7 @@
 >
 > 除了原有的方案，AS 实现了一个简单的 API 为导向的路由模式，为的是能够更好、更舒适的开发动态或静态接口。
 
-# 开箱即用，简单方便
+## 1. 开箱即用，简单方便
 
 第一步，直接 git 对应的 master 分支，这边 gitee 和 github 两个仓库同时同步，clone 后即可得到一个新鲜的 AS 服务器。
 
@@ -46,4 +50,49 @@ node ./server/index.js
 
 ```
 npm run start
+```
+
+## 2. server 配置
+
+AS 服务器提供了 Server 的配置项，配置文件是`./server/server.config.js`，可以直接打开它自由配置，下面我们来看看都有那些可配置的吧~
+
+### 2.1 port 端口设定
+
+配置项 port 是指定开放端口，如果不配置则默认为 80 端口。下面的配置示例实现了开放 3030 端口。
+
+```javascript
+module.exports = {
+  port: 3030,
+};
+```
+
+### 2.2 middleware 中间件使用
+
+AS 服务器完美兼容了 Koa 的中间件系统，使用中间件很简单，只需要配置`middleware`，它接受的是一个数组，数组里面可以接受字符串和函数。
+
+接受字符串时，表示中间件名称，会通过`./server/middleware`文件夹找到对应的中间件。当然，搜寻的中间件地址可以修改配置的`[middlewarePath](#23-middlewarepath-%E8%AE%BE%E7%BD%AE%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%90%9C%E5%AF%BB%E5%9C%B0%E5%9D%80)字段，达到自定义搜寻路径。
+
+接受函数时，则直接当做中间件使用。
+
+如下配置，实现了两个类型的中间件使用，使用顺序是从左到右的。
+
+```javascript
+const serve = require("koa-static");
+const path = require("path");
+module.exports = {
+  middleware: ["method-link", serve(path.resolve(__dirname, "../root"))],
+};
+```
+
+### 2.3 middlewarePath 设置中间件搜寻地址
+
+搜寻中间件时，默认搜寻位置是在`./server/middleware`文件夹下，如果有特别的需求，可以修改配置项`middlewarePath`达到搜寻路径的效果，一般不建议修改。
+
+如下配置，实现了修改搜寻路径到`./server/mw`文件夹下。
+
+```javascript
+const path = require("path");
+module.exports = {
+  middlewarePath: path.resolve(__dirname, "./mw"),
+};
 ```

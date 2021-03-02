@@ -5,4 +5,5 @@ module.exports = {
   port: 80,
   // 中间层注册
   middleware: ["method-link", serve(path.resolve(__dirname, "../root"))],
+  middlewarePath: path.resolve(__dirname, "./mw"),
 };
